@@ -1,0 +1,34 @@
+.create-notebook-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+
+  form {
+    width: 720px;
+    border: 1px solid var(--secondary-0);
+    border-radius: 15px;
+    padding: 16px 24px;
+  }
+
+  div {
+    margin: 24px 20px;
+  }
+
+  label {
+    display: block;
+  }
+
+  .main_inputs  {
+    label, input, textarea {
+      display: block;
+      width: 640px;
+    }
+  }
+  .secret {
+    display: flex;
+    justify-content: space-between;
+  }
+}

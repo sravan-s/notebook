@@ -1,0 +1,7 @@
+#root {
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: var(--background-0);
+  color: var(--primary-0);
+}

@@ -1,0 +1,37 @@
+.notebook-card__wrap {
+  --width: 240px;
+  --inner-padding: 12px;
+  background-color: var(--background-1);
+  border: 1px solid var(--background-4);
+  border-radius: 15px;
+  transition: box-shadow .25s;
+  height: 240px;
+  width: var(--width);
+  margin: 8px;
+  &:hover {
+    box-shadow: var(--secondary-0) 0px 1px 2px 0px, var(--secondary-1) 0px 1px 3px 1px;
+  }
+  section {
+    margin: var(--inner-padding);
+  }
+  a {
+    display: inline-block;
+    cursor: pointer;
+    color: var(--primary-2);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(var(--width) - var(--inner-padding) - var(--inner-padding));
+    &:hover {
+      color: var(--primary-1);
+      text-decoration: underline;
+    }
+  }
+  .date {
+    font-size: 0.8rem;
+  }
+  p {
+    font-size: 0.8rem;
+    word-wrap: break-word;
+  }
+}

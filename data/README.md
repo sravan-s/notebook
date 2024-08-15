@@ -1,0 +1,1 @@
+Databases are stored here and gitignored
