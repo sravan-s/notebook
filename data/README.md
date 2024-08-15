@@ -1,1 +1,1 @@
-Databases are stored here and gitignored
+SQL dump

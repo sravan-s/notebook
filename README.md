@@ -19,7 +19,8 @@ What if I try to implement a POC of "web-based-notebook"?
 No ACL/user management for now
 No resource specs for now
 
-I develop in Linux, should work on Mac too. Windows probably not
+I develop in Linux, should work in Mac too. Windows probably not
 Steps:
 * Get https://www.jetify.com/devbox/docs/quickstart/ 
-* See `devbox.json` for the requirements
+* See `devbox.json` for the requirements(You can manually install those too)
+* `devbox shell` to enter shell with all the dev. requirements

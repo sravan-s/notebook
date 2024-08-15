@@ -3,12 +3,11 @@
   "packages": [
     "firecracker@1.7.0",
     "nodejs@22.4.1",
-    "rustc@1.79.0",
-    "postgresql@15.7"
+    "rustc@1.79.0"
   ],
   "shell": {
     "init_hook": [
-      "postgres -c config_file=./postgresql.conf"
+      ""
     ],
     "scripts": {
       "test": [
