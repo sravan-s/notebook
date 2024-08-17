@@ -15,12 +15,20 @@ What if I try to implement a POC of "web-based-notebook"?
   * Setup secrets
 5. Implement an API to access/print data
 6. Share data among paragraphs using this API
+7. How about having a gitlike version control?
+  - No autosave, must commit before running
+8. Pkg mgmt system for notebook
 
 No ACL/user management for now
 No resource specs for now
 
 I develop in Linux, should work in Mac too. Windows probably not
 Steps:
-* Get https://www.jetify.com/devbox/docs/quickstart/ 
+* Get devbox https://www.jetify.com/devbox/docs/quickstart/ 
 * See `devbox.json` for the requirements(You can manually install those too)
 * `devbox shell` to enter shell with all the dev. requirements
+
+References:
+* https://www.jetify.com/devbox/docs/devbox_examples/languages/rust/
+* https://www.nixhub.io/packages
+* https://nixos.wiki/wiki/Cleaning_the_nix_store
