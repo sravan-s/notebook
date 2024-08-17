@@ -1,5 +1,6 @@
 use anyhow::{Context, Result};
 
+mod api;
 mod bootstrap;
 mod db;
 
@@ -9,5 +10,6 @@ async fn main() -> Result<()> {
         .await
         .context("Bootstrapping application failed")
         .unwrap();
+    api::start().await.context("Setup API server").unwrap();
     Ok(())
 }

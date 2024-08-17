@@ -9,7 +9,7 @@ pub async fn init() -> Result<()> {
         println!("Creating databse {}", DB_URL);
         Sqlite::create_database(DB_URL)
             .await
-            .context("Couldnt create database")
+            .context("Create database")
             .unwrap();
         println!("Created databse");
     } else {
@@ -23,7 +23,7 @@ pub async fn create_tables() -> Result<()> {
     println!("Setting up tables");
     let db = SqlitePool::connect(DB_URL)
         .await
-        .context("Connection to DB failed")
+        .context("Connect to DB")
         .unwrap();
     let _create_notebooks = sqlx::query(
         "
@@ -35,7 +35,7 @@ pub async fn create_tables() -> Result<()> {
     )
     .execute(&db)
     .await
-    .context("Couldnt create TABLE notebooks")
+    .context("Create TABLE notebooks")
     .unwrap();
 
     let _create_notebook_versions = sqlx::query(
@@ -51,7 +51,7 @@ pub async fn create_tables() -> Result<()> {
     )
     .execute(&db)
     .await
-    .context("Couldnt create TABLE notebook_versions")
+    .context("Create TABLE notebook_versions")
     .unwrap();
 
     let _create_paragraphs = sqlx::query(
@@ -70,7 +70,7 @@ pub async fn create_tables() -> Result<()> {
     )
     .execute(&db)
     .await
-    .context("Couldnt create TABLE paragraphs")
+    .context("Create TABLE paragraphs")
     .unwrap();
 
     let _create_secrets = sqlx::query(
@@ -84,7 +84,7 @@ pub async fn create_tables() -> Result<()> {
     )
     .execute(&db)
     .await
-    .context("Couldnt create TABLE secrets")
+    .context("Create TABLE secrets")
     .unwrap();
 
     Ok(())
