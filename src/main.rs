@@ -1,8 +1,11 @@
 use anyhow::{Context, Result};
+use app_state::AppState;
 
 mod api;
+mod app_state;
 mod bootstrap;
 mod db;
+mod models;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -10,6 +13,10 @@ async fn main() -> Result<()> {
         .await
         .context("Bootstrapping application failed")
         .unwrap();
-    api::start().await.context("Setup API server").unwrap();
+    let app_state = AppState::new().await;
+    api::start(app_state)
+        .await
+        .context("Setup API server")
+        .unwrap();
     Ok(())
 }

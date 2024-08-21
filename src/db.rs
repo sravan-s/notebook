@@ -1,7 +1,9 @@
 use anyhow::{Context, Ok, Result};
 use sqlx::{migrate::MigrateDatabase, Sqlite, SqlitePool};
 
-const DB_URL: &str = "sqlite://notebook.db";
+use crate::models::{notebook, notebook_version, paragrpah, secret};
+
+pub const DB_URL: &str = "sqlite://data/notebook.db";
 
 pub async fn init() -> Result<()> {
     println!("Setting up databse");
@@ -25,67 +27,29 @@ pub async fn create_tables() -> Result<()> {
         .await
         .context("Connect to DB")
         .unwrap();
-    let _create_notebooks = sqlx::query(
-        "
-            CREATE TABLE IF NOT EXISTS notebooks (
-                id INTEGER PRIMARY KEY NOT NULL,
-                archived TINYINT,
-                created_at INTEGER);
-        ",
-    )
-    .execute(&db)
-    .await
-    .context("Create TABLE notebooks")
-    .unwrap();
+    let _create_notebooks = sqlx::query(notebook::db::CREATE_TABLE_QUERY)
+        .execute(&db)
+        .await
+        .context("Create TABLE notebooks")
+        .unwrap();
 
-    let _create_notebook_versions = sqlx::query(
-        "
-            CREATE TABLE IF NOT EXISTS notebook_versions (
-                id INTEGER PRIMARY KEY NOT NULL,
-                notebook_id INTEGER NOT NULL,
-                created_at INTEGER,
-                updated_at INTEGER,
-                dependencies TEXT,
-                FOREIGN KEY (notebook_id) REFERENCES notebooks(id) ON DELETE CASCADE);
-        ",
-    )
-    .execute(&db)
-    .await
-    .context("Create TABLE notebook_versions")
-    .unwrap();
+    let _create_notebook_versions = sqlx::query(notebook_version::db::CREATE_TABLE_QUERY)
+        .execute(&db)
+        .await
+        .context("Create TABLE notebook_versions")
+        .unwrap();
 
-    let _create_paragraphs = sqlx::query(
-        "
-            CREATE TABLE IF NOT EXISTS paragraphs (
-                id INTEGER PRIMARY KEY NOT NULL,
-                notebook_version INTEGER NOT NULL,
-                created_at INTEGER,
-                updated_at INTEGER,
-                status TINYINT,
-                code TEXT,
-                result TEXT,
-                meta TEXT,
-                FOREIGN KEY (notebook_version) REFERENCES notebook_versions(id) ON DELETE CASCADE);
-        ",
-    )
-    .execute(&db)
-    .await
-    .context("Create TABLE paragraphs")
-    .unwrap();
+    let _create_paragraphs = sqlx::query(paragrpah::db::CREATE_TABLE_QUERY)
+        .execute(&db)
+        .await
+        .context("Create TABLE paragraphs")
+        .unwrap();
 
-    let _create_secrets = sqlx::query(
-        "
-            CREATE TABLE IF NOT EXISTS secrets (
-                id INTEGER PRIMARY KEY NOT NULL,
-                notebook_id INTEGER NOT NULL,
-                data BLOB,
-                FOREIGN KEY (notebook_id) REFERENCES notebooks(id) ON DELETE CASCADE);
-        ",
-    )
-    .execute(&db)
-    .await
-    .context("Create TABLE secrets")
-    .unwrap();
+    let _create_secrets = sqlx::query(secret::db::CREATE_TABLE_QUERY)
+        .execute(&db)
+        .await
+        .context("Create TABLE secrets")
+        .unwrap();
 
     Ok(())
 }
