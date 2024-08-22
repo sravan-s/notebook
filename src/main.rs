@@ -6,6 +6,7 @@ mod app_state;
 mod bootstrap;
 mod db;
 mod models;
+mod utils;
 
 #[tokio::main]
 async fn main() -> Result<()> {

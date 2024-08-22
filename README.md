@@ -19,6 +19,9 @@ What if I try to implement a POC of "web-based-notebook"?
   - No autosave, must commit before running
 8. Pkg mgmt system for notebook
 
+> A lot of things would be scoped down because, the key part is firecracker
+> And almost everything else is a distraction
+
 No ACL/user management for now
 No resource specs for now
 

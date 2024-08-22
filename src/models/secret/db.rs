@@ -5,3 +5,13 @@ pub const CREATE_TABLE_QUERY: &str = "
         data BLOB,
         FOREIGN KEY (notebook_id) REFERENCES notebooks(id) ON DELETE CASCADE);
 ";
+
+/*
+ * Todo: encrypt secrets
+ * This must be encrypted, I will do after setting up firecracker
+ * */
+
+pub const INSERT_SECRET: &str = "
+    INSERT INTO secrets (notebook_id, data)
+    VALUES($1, $2);
+";

@@ -7,8 +7,9 @@ archived_at,
 name,
 description,
 created_at,
+updated_at,
 
-NotebookVersions
+NotebookVersions // maybe. not doing this now
 ---
 id, Notebooks(id), created_at, updated_at
 
