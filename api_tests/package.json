@@ -1,0 +1,14 @@
+{
+  "name": "api_tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest"
+  },
+  "author": "sravan",
+  "license": "SEE LICENSE IN ../LICENSE",
+  "devDependencies": {
+    "vitest": "^2.0.5"
+  }
+}
