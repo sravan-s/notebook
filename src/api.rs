@@ -3,12 +3,15 @@ use std::sync::Arc;
 use anyhow::{Context, Ok, Result};
 use axum::{
     extract::{self, Path},
-    routing::{get, post},
+    routing::{get, post, put},
     Router,
 };
 use tower_http::trace::TraceLayer;
 
-use crate::{app_state, models::notebook};
+use crate::{
+    app_state,
+    models::{notebook, paragraph},
+};
 
 pub async fn start(app_state: app_state::AppState) -> Result<()> {
     let app_state = Arc::from(app_state);
@@ -56,12 +59,59 @@ pub async fn start(app_state: app_state::AppState) -> Result<()> {
                 }
             }),
         )
+        .route(
+            "/notebook/:id/run",
+            put({
+                let app_state = Arc::clone(&app_state);
+                move |Path(notebook_id): Path<String>| {
+                    notebook::api_handlers::run_notebook_with_id(notebook_id, app_state)
+                }
+            }),
+        )
+        .route(
+            "/notebook/:id/paragraphs",
+            get({
+                let app_state = Arc::clone(&app_state);
+                move |Path(notebook_id): Path<String>| {
+                    paragraph::api_handlers::get_paragraphs(notebook_id, app_state)
+                }
+            }),
+        )
+        .route(
+            "/notebook/:id/paragraph",
+            post({
+                let app_state = Arc::clone(&app_state);
+                move |Path(notebook_id): Path<String>, Path(paragraph_id): Path<String>| {
+                    paragraph::api_handlers::create_paragraph()
+                }
+            }),
+        )
+        .route(
+            "/notebook/:id/paragraph/:paragraph_id",
+            get({
+                let app_state = Arc::clone(&app_state);
+                move |Path(notebook_id): Path<String>, Path(paragraph_id): Path<String>| {
+                    paragraph::api_handlers::get_paragraph_by_id()
+                }
+            })
+            .put({
+                let app_state = Arc::clone(&app_state);
+                move |Path(notebook_id): Path<String>, Path(paragraph_id): Path<String>| {
+                    paragraph::api_handlers::update_paragraph()
+                }
+            })
+            .delete({
+                let app_state = Arc::clone(&app_state);
+                move |Path(notebook_id): Path<String>, Path(paragraph_id): Path<String>| {
+                    paragraph::api_handlers::delete_paragraph()
+                }
+            }),
+        )
         /*
         .route("/notebook_versions", get())
         .route("/notebook_version/:id", get().post().delete()) // no
         // updates
         .route("/notebook_version_paragraphs/:id", get())
-        .route("/notebook_paragraphs/:id", get())
         .route("/paragraph/:id", get().post().put().delete())
         .route("/run/paragraph/:id", post())
         .route("/run/notebook_version/:id", post())

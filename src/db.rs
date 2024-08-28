@@ -1,7 +1,7 @@
 use anyhow::{Context, Ok, Result};
 use sqlx::{migrate::MigrateDatabase, Sqlite, SqlitePool};
 
-use crate::models::{notebook, paragrpah, secret};
+use crate::models::{notebook, paragraph, secret};
 
 pub const DB_URL: &str = "sqlite://data/notebook.db";
 
@@ -41,7 +41,7 @@ pub async fn create_tables() -> Result<()> {
         .unwrap();
     */
 
-    let _create_paragraphs = sqlx::query(paragrpah::db::CREATE_TABLE_QUERY)
+    let _create_paragraphs = sqlx::query(paragraph::db::CREATE_TABLE_QUERY)
         .execute(&db)
         .await
         .context("Create TABLE paragraphs")

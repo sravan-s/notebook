@@ -40,6 +40,14 @@ pub async fn get_notebook_with_id(
     }
 }
 
+pub async fn run_notebook_with_id(
+    _notebook_id: String,
+    _app_state: Arc<app_state::AppState>,
+) -> impl IntoResponse {
+    // to do firecracker
+    (StatusCode::OK, Json("{}").into_response())
+}
+
 pub async fn create_notebook(
     payload: super::model::CreateNotebookPayload,
     app_state: Arc<app_state::AppState>,
@@ -61,13 +69,13 @@ pub async fn create_notebook(
         .bind(now)
         .bind(now)
         .bind(payload.dependencies)
+        .bind("".to_string()) // paragraphs - empty string
         .execute(&mut *tx)
         .await;
     //.context("Error in inserting notebook");
 
     if insert_notebook_result.is_err() {
         let _ = tx.rollback().await;
-        println!("{:?}", insert_notebook_result);
         return (
             StatusCode::INTERNAL_SERVER_ERROR,
             format!(

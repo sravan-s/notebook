@@ -17,6 +17,7 @@ pub struct NotebookFull {
     created_at: i64,
     updated_at: i64,
     archived_at: i64,
+    paragraphs: String, // we probably have to manually verify paragraphs
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

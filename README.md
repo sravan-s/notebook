@@ -30,6 +30,9 @@ Steps:
 * Get devbox https://www.jetify.com/devbox/docs/quickstart/ 
 * See `devbox.json` for the requirements(You can manually install those too)
 * `devbox shell` to enter shell with all the dev. requirements
+* Backend is in `/src`
+* Web is in `/web`
+* API tests are in `/api_tests`
 
 References:
 * https://www.jetify.com/devbox/docs/devbox_examples/languages/rust/

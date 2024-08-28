@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { env } from './env';
 
 const notebook_body = {
-  "name": "my_notebook",
+  "name": `my_notebook${new Date().toISOString()}`,
   "description": "my description",
   "dependencies": "a:version; b:version; c:version",
   "secrets": "a: val; b: val; c: val"
@@ -34,7 +34,7 @@ describe("Notebook", () => {
     expect(notebook_get.description).toBeTypeOf("string");
     expect(notebook_get.updated_at).toBeTypeOf("number");
 
-    // fetch delete notebook
+    // delete notebook
     let request_delete = await fetch(`${env.API}/notebook/${notebook.id}`, {
       method: "DELETE",
     });
