@@ -155,7 +155,7 @@ pub async fn reorder_paragraphs(
     };
     let paragraphs_doesnt_exist = paragraph::model::paragraphs_from_string(
         paragraphs.clone(),
-        notebook_id.clone(),
+        notebook_id,
         app_state.db_pool.clone(),
     )
     .await
@@ -171,7 +171,7 @@ pub async fn reorder_paragraphs(
 
     let result = sqlx::query(super::db::UPDATE_NOTEBOOK_PARAGRAPHS)
         .bind(paragraphs)
-        .bind(notebook_id.clone())
+        .bind(notebook_id)
         .execute(&app_state.db_pool)
         .await
         .context("Update notebook");
@@ -190,15 +190,11 @@ pub async fn reorder_paragraphs(
             .context("Fetching inserted notebook");
 
     match notebook_full {
-        Ok(n) => {
-            return (StatusCode::OK, Json(n).into_response());
-        }
-        Err(_) => {
-            return (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                "paragraphs were added, but couldnt retrive notebook afterwards".into_response(),
-            );
-        }
+        Ok(n) => (StatusCode::OK, Json(n).into_response()),
+        Err(_) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "paragraphs were added, but couldnt retrive notebook afterwards".into_response(),
+        ),
     }
 }
 

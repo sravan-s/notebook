@@ -95,7 +95,7 @@ pub async fn create_paragraph(
     let paragraph_id = match paragraph_insert_result {
         Ok(r) => r.last_insert_rowid(),
         _ => {
-            tx.rollback().await;
+            let _ = tx.rollback().await;
             return (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Coulndt Insert paragraph to DB".into_response(),
@@ -114,7 +114,7 @@ pub async fn create_paragraph(
     let notebook = match notebook {
         Ok(n) => n,
         Err(_) => {
-            tx.rollback().await;
+            let _ = tx.rollback().await;
             return (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Couldnt insert paragraph to notebook".into_response(),
@@ -132,7 +132,7 @@ pub async fn create_paragraph(
         .await;
 
     if notebook.is_err() {
-        tx.rollback().await;
+        let _ = tx.rollback().await;
         return (
             StatusCode::INTERNAL_SERVER_ERROR,
             "Couldnt update paragraph list".into_response(),
@@ -147,15 +147,15 @@ pub async fn create_paragraph(
 
     match paragraph {
         Ok(p) => {
-            tx.commit().await;
-            return (StatusCode::CREATED, Json(p).into_response());
+            let _ = tx.commit().await;
+            (StatusCode::CREATED, Json(p).into_response())
         }
         Err(_) => {
-            tx.rollback().await;
-            return (
+            let _ = tx.rollback().await;
+            (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Couldnt fetch created paragraph".into_response(),
-            );
+            )
         }
     }
 }
@@ -199,14 +199,12 @@ pub async fn get_paragraph_by_id(
                     "No paragraph within given ID in the notebook".into_response(),
                 );
             }
-            return (StatusCode::OK, Json(p).into_response());
+            (StatusCode::OK, Json(p).into_response())
         }
-        Err(_) => {
-            return (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                "Couldnt fetch paragraph".into_response(),
-            );
-        }
+        Err(_) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Couldnt fetch paragraph".into_response(),
+        ),
     }
 }
 
