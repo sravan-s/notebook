@@ -27,3 +27,8 @@ pub struct CreateNotebookPayload {
     pub dependencies: String,
     pub secrets: String,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ReorderParagraphsPayload {
+    pub paragraphs: String,
+}

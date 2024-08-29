@@ -87,11 +87,31 @@ pub async fn start(app_state: app_state::AppState) -> Result<()> {
             }),
         )
         .route(
+            "/notebook/:id/paragraphs_reorder",
+            put({
+                let app_state = Arc::clone(&app_state);
+                move |Path(notebook_id): Path<String>,
+                      extract::Json(payload): extract::Json<
+                    notebook::model::ReorderParagraphsPayload,
+                >| {
+                    notebook::api_handlers::reorder_paragraphs(
+                        notebook_id,
+                        payload.paragraphs,
+                        app_state,
+                    )
+                }
+            }),
+        )
+        .route(
             "/notebook/:id/paragraph/:paragraph_id",
             get({
                 let app_state = Arc::clone(&app_state);
                 move |Path(notebook_id): Path<String>, Path(paragraph_id): Path<String>| {
-                    paragraph::api_handlers::get_paragraph_by_id()
+                    paragraph::api_handlers::get_paragraph_by_id(
+                        paragraph_id,
+                        notebook_id,
+                        app_state,
+                    )
                 }
             })
             .put({

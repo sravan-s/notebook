@@ -15,7 +15,7 @@ pub struct ParagraphFull {
     code: String,
     result: String,
     meta: String,
-    notebook_id: i64,
+    pub notebook_id: i64,
 }
 
 pub async fn paragraphs_from_string(

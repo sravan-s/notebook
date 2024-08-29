@@ -2,7 +2,6 @@ use std::sync::Arc;
 
 use anyhow::{Context, Result};
 use axum::{http::StatusCode, response::IntoResponse, Json};
-use sqlx::types::Json;
 
 use crate::{app_state, models::notebook, utils};
 
@@ -161,8 +160,54 @@ pub async fn create_paragraph(
     }
 }
 
-pub async fn get_paragraph_by_id() -> impl IntoResponse {
-    (StatusCode::OK, "sucess".into_response())
+pub async fn get_paragraph_by_id(
+    paragraph_id: String,
+    notebook_id: String,
+    app_state: Arc<app_state::AppState>,
+) -> impl IntoResponse {
+    let notebook_id = match notebook_id.parse::<i64>() {
+        Ok(i) => i,
+        Err(_) => {
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "notebook_id cannot be converted to a number".into_response(),
+            );
+        }
+    };
+
+    let paragraph_id = match paragraph_id.parse::<i64>() {
+        Ok(i) => i,
+        Err(_) => {
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "notebook_id cannot be converted to a number".into_response(),
+            );
+        }
+    };
+
+    let paragraph: Result<ParagraphFull> = sqlx::query_as(super::db::GET_PARAGRAPH_BY_ID)
+        .bind(paragraph_id)
+        .fetch_one(&app_state.db_pool)
+        .await
+        .context("Fetching paragraph");
+
+    match paragraph {
+        Ok(p) => {
+            if p.notebook_id != notebook_id {
+                return (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "No paragraph within given ID in the notebook".into_response(),
+                );
+            }
+            return (StatusCode::OK, Json(p).into_response());
+        }
+        Err(_) => {
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "Couldnt fetch paragraph".into_response(),
+            );
+        }
+    }
 }
 
 pub async fn update_paragraph() -> impl IntoResponse {

@@ -3,7 +3,11 @@ use std::sync::Arc;
 use anyhow::{Context, Result};
 use axum::{http::StatusCode, response::IntoResponse, Json};
 
-use crate::{app_state, models::secret, utils};
+use crate::{
+    app_state,
+    models::{paragraph, secret},
+    utils,
+};
 
 pub async fn get_notebooks(app_state: Arc<app_state::AppState>) -> impl IntoResponse {
     let results: Result<Vec<super::model::NotebookSummary>> =
@@ -132,6 +136,69 @@ pub async fn create_notebook(
             StatusCode::INTERNAL_SERVER_ERROR,
             e.to_string().into_response(),
         ),
+    }
+}
+
+pub async fn reorder_paragraphs(
+    notebook_id: String,
+    paragraphs: String,
+    app_state: Arc<app_state::AppState>,
+) -> impl IntoResponse {
+    let notebook_id = match notebook_id.parse::<i64>() {
+        Ok(i) => i,
+        Err(_) => {
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "notebook_id cannot be converted to a number".into_response(),
+            );
+        }
+    };
+    let paragraphs_doesnt_exist = paragraph::model::paragraphs_from_string(
+        paragraphs.clone(),
+        notebook_id.clone(),
+        app_state.db_pool.clone(),
+    )
+    .await
+    .into_iter()
+    .any(|z| z.is_none());
+
+    if paragraphs_doesnt_exist {
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Some paragraphs doesnt exist or payload is malformed".into_response(),
+        );
+    }
+
+    let result = sqlx::query(super::db::UPDATE_NOTEBOOK_PARAGRAPHS)
+        .bind(paragraphs)
+        .bind(notebook_id.clone())
+        .execute(&app_state.db_pool)
+        .await
+        .context("Update notebook");
+
+    if result.is_err() {
+        return (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Couldnt insert paragraphs to DB".into_response(),
+        );
+    }
+    let notebook_full: Result<super::model::NotebookFull> =
+        sqlx::query_as(super::db::GET_NOTEBOOK_BY_ID)
+            .bind(notebook_id)
+            .fetch_one(&app_state.db_pool)
+            .await
+            .context("Fetching inserted notebook");
+
+    match notebook_full {
+        Ok(n) => {
+            return (StatusCode::OK, Json(n).into_response());
+        }
+        Err(_) => {
+            return (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "paragraphs were added, but couldnt retrive notebook afterwards".into_response(),
+            );
+        }
     }
 }
 
