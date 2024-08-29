@@ -22,3 +22,9 @@ pub const GET_PARAGRAPH_BY_ID: &str = "
     FROM paragraphs
     WHERE id = ?
 ";
+
+pub const INSERT_PARAGRAPH: &str = "
+    INSERT INTO paragraphs
+    (notebook_id, created_at, updated_at, status, code, result, meta)
+    ($1, $2, $3, 0, '', '', '');
+";

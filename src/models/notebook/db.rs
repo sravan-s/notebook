@@ -23,4 +23,6 @@ pub const INSERT_NOTEBOOK: &str = "
     INSERT INTO notebooks (name, description, created_at, updated_at, dependencies, paragraphs, archived_at)
     VALUES($1, $2, $3, $4, $5, $6, 0);";
 
+pub const UPDATE_NOTEBOOK_PARAGRAPHS: &str = "UPDATE notebooks SET paragraphs = $1 WHERE id = $2;";
+
 pub const DELETE_NOTEBOOK_BY_ID: &str = "UPDATE notebooks SET archived_at = $1 WHERE id = $2";

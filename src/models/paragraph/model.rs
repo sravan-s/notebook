@@ -4,6 +4,8 @@ use serde::Serialize;
 use sqlx::{prelude::FromRow, Pool, Sqlite};
 use tokio::task::JoinHandle;
 
+use crate::utils::paragraphs_to_vec;
+
 #[derive(FromRow, Debug, Clone, Serialize)]
 pub struct ParagraphFull {
     id: i64,
@@ -16,16 +18,12 @@ pub struct ParagraphFull {
     notebook_id: i64,
 }
 
-pub const PARAGRAPH_DELIMITER: &str = ";";
-
 pub async fn paragraphs_from_string(
     plain_str: String,
     notebook_id: i64,
     db_pool: Pool<Sqlite>,
 ) -> Vec<Option<ParagraphFull>> {
-    let paragraphs_handle: Vec<JoinHandle<Option<ParagraphFull>>> = plain_str
-        .split(PARAGRAPH_DELIMITER)
-        .into_iter()
+    let paragraphs_handle: Vec<JoinHandle<Option<ParagraphFull>>> = paragraphs_to_vec(&plain_str)
         .map(|pid| {
             let pid = pid.to_owned();
             let db_pool = db_pool.clone();

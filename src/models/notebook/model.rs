@@ -11,13 +11,13 @@ pub struct NotebookSummary {
 
 #[derive(FromRow, Debug, Clone, Serialize)]
 pub struct NotebookFull {
-    id: i64,
+    pub id: i64,
     name: String,
     description: String,
     created_at: i64,
     updated_at: i64,
     archived_at: i64,
-    paragraphs: String, // we probably have to manually verify paragraphs
+    pub paragraphs: String, // we probably have to manually verify paragraphs
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

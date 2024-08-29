@@ -81,8 +81,8 @@ pub async fn start(app_state: app_state::AppState) -> Result<()> {
             "/notebook/:id/paragraph",
             post({
                 let app_state = Arc::clone(&app_state);
-                move |Path(notebook_id): Path<String>, Path(paragraph_id): Path<String>| {
-                    paragraph::api_handlers::create_paragraph()
+                move |Path(notebook_id): Path<String>| {
+                    paragraph::api_handlers::create_paragraph(notebook_id, app_state)
                 }
             }),
         )
