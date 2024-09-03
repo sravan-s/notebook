@@ -33,6 +33,7 @@ Steps:
 * Backend is in `/src`
 * Web is in `/web`
 * API tests are in `/api_tests`
+* You need some dependencies to run Firecracker, for that look at `./linux/README.md`
 
 References:
 * https://www.jetify.com/devbox/docs/devbox_examples/languages/rust/

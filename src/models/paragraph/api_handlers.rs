@@ -215,3 +215,31 @@ pub async fn update_paragraph() -> impl IntoResponse {
 pub async fn delete_paragraph() -> impl IntoResponse {
     (StatusCode::OK, "success".into_response())
 }
+
+pub async fn run_paragrpah_with_id(
+    paragraph_id: i64,
+    notebook_id: i64,
+    app_state: Arc<app_state::AppState>,
+) -> impl IntoResponse {
+    let paragraph: Result<ParagraphFull> = sqlx::query_as(super::db::GET_PARAGRAPH_BY_ID)
+        .bind(paragraph_id)
+        .fetch_one(&app_state.db_pool)
+        .await
+        .context("Fetch paragraph");
+
+    match paragraph {
+        Ok(p) => {
+            if p.notebook_id != notebook_id {
+                return (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Paragraph doesnt belong to notebook".into_response(),
+                );
+            }
+            (StatusCode::OK, "Runing".into_response())
+        }
+        Err(_) => (
+            StatusCode::INTERNAL_SERVER_ERROR,
+            "Paragraph doesnt exist".into_response(),
+        ),
+    }
+}

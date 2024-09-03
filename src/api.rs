@@ -114,6 +114,7 @@ pub async fn start(app_state: app_state::AppState) -> Result<()> {
                     )
                 }
             })
+            // will do the next two later. Now its time for fun part
             .put({
                 let app_state = Arc::clone(&app_state);
                 move |Path(notebook_id): Path<String>, Path(paragraph_id): Path<String>| {
@@ -124,6 +125,20 @@ pub async fn start(app_state: app_state::AppState) -> Result<()> {
                 let app_state = Arc::clone(&app_state);
                 move |Path(notebook_id): Path<String>, Path(paragraph_id): Path<String>| {
                     paragraph::api_handlers::delete_paragraph()
+                }
+            }),
+        )
+        // the fun part
+        .route(
+            "/notebook/:id/paragraph-run/:paragraph_id",
+            put({
+                let app_state = Arc::clone(&app_state);
+                move |Path(notebook_id): Path<i64>, Path(paragraph_id): Path<i64>| {
+                    paragraph::api_handlers::run_paragrpah_with_id(
+                        paragraph_id,
+                        notebook_id,
+                        app_state,
+                    )
                 }
             }),
         )
