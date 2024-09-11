@@ -3,6 +3,19 @@ name = "notebook"
 version = "0.1.0"
 edition = "2021"
 
+[profile.dev]
+opt-level = 0
+debug = true
+split-debuginfo = '...'  # Platform-specific.
+strip = "none"
+debug-assertions = true
+overflow-checks = true
+lto = false
+panic = 'unwind'
+incremental = true
+codegen-units = 256
+rpath = false
+
 [dependencies]
 anyhow = "1.0.86"
 axum = "0.7.5"
