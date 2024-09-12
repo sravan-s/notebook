@@ -1,4 +1,4 @@
-use std::time::Duration;
+use std::time::{Duration, Instant};
 
 use anyhow::{Ok, Result};
 use firepilot::{
@@ -13,11 +13,12 @@ use tokio::time::sleep;
 pub async fn init_vm() -> Result<()> {
     // to do - add the paths to .env
     // These are deployment env specific
-    let kernel_image_path = "/home/sravan/src/notebook/linux/vmlinux-5.10.223".to_string();
-    let rootfs_path = "/home/sravan/src/notebook/linux/ubuntu-22.04.ext4".to_string();
+    let kernel_image_path = "/home/sravan/src/notebook/linux/assets/vmlinux".to_string();
+    let rootfs_path = "/home/sravan/src/notebook/linux/assets/rootfs.ext4".to_string();
     let executer_path = "/home/sravan/src/notebook/linux/executer/".to_string();
     let firecracker_bin_location = "/usr/bin/firecracker".to_string();
 
+    let now = Instant::now();
     println!("Starting a VM");
     let kernel = KernelBuilder::new()
         .with_kernel_image_path(kernel_image_path)
@@ -52,7 +53,10 @@ pub async fn init_vm() -> Result<()> {
 
     println!("Boot micro vm");
     machine.start().await.expect("Could not start VM");
-    println!("Waiting a few seconds, the VM is started at this point");
+    println!(
+        "Waiting a few seconds, the VM started at this point, it took: {:?}",
+        now.elapsed()
+    );
     sleep(Duration::from_secs(5)).await;
     machine.stop().await.unwrap();
     println!("Shutting down the VM");
