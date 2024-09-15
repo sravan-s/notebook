@@ -142,6 +142,15 @@ pub async fn start(app_state: app_state::AppState) -> Result<()> {
                 }
             }),
         )
+        .route(
+            "/notebook/:id/paragraph/:paragraph_id/result",
+            put({
+                let app_state = Arc::clone(&app_state);
+                move |Path(notebook_id): Path<i64>, Path(paragraph_id): Path<i64>| {
+                    paragraph::api_handlers::handle_result(paragraph_id, notebook_id, app_state)
+                }
+            }),
+        )
         /*
         .route("/notebook_versions", get())
         .route("/notebook_version/:id", get().post().delete()) // no

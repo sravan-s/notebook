@@ -243,3 +243,13 @@ pub async fn run_paragrpah_with_id(
         ),
     }
 }
+
+pub async fn handle_result(
+    _paragraph_id: i64,
+    _notebook_id: i64,
+    _app_state: Arc<app_state::AppState>,
+) -> impl IntoResponse {
+    // verify
+    // do a serverside event
+    (StatusCode::OK, "success".into_response())
+}

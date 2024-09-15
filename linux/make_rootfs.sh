@@ -6,8 +6,6 @@
 # formats it, and mounts it to the /tmp/my-rootfs directory so that it can be
 # used like a real filesystem
 
-mkdir -p assets
-
 dd if=/dev/zero of=rootfs.ext4 bs=1M count=200
 mkfs.ext4 rootfs.ext4
 mkdir -p /tmp/my-rootfs

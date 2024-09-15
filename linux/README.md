@@ -2,11 +2,15 @@
 
 Run all scripts in this directory
 
+# TLDR
+#1. cd <project>/linux  # this is important
+#2. Run `./build.sh`
+
+---
 Download Guest Kernel Image
 You can either use `./download_vmlinux.sh` to download them or  manually do it with the following guide
 
-
-This agent will live inside a 
+This agent will live inside the ext4 file system 
 
 How to add agent to rootfs ->
 

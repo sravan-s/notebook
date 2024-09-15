@@ -34,6 +34,7 @@ Steps:
 * Web is in `/web`
 * API tests are in `/api_tests`
 * You need some dependencies to run Firecracker, for that look at `./linux/README.md`
+* Install `docker` if you want to build firecracker image.
 
 References:
 * https://www.jetify.com/devbox/docs/devbox_examples/languages/rust/
