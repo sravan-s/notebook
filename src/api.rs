@@ -16,9 +16,6 @@ use crate::{
 pub async fn start(app_state: app_state::AppState) -> Result<()> {
     let app_state = Arc::from(app_state);
     println!("Setting up API server");
-    tracing_subscriber::fmt()
-        .with_max_level(tracing::Level::DEBUG)
-        .init();
     let app = Router::new()
         .route("/", get(|| async { "Server running" }))
         .route(

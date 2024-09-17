@@ -3,8 +3,8 @@ use std::time::{Duration, Instant};
 use anyhow::{Ok, Result};
 use firepilot::{
     builder::{
-        drive::DriveBuilder, executor::FirecrackerExecutorBuilder, kernel::KernelBuilder, Builder,
-        Configuration,
+        drive::DriveBuilder, executor::FirecrackerExecutorBuilder, kernel::KernelBuilder,
+        network_interface::NetworkInterfaceBuilder, Builder, Configuration,
     },
     machine::Machine,
 };
@@ -34,18 +34,26 @@ pub async fn init_vm() -> Result<()> {
         .as_root_device()
         .try_build()
         .unwrap();
-    println!("rootfs loaded");
+    println!("fin - rootfs loaded");
 
     let executor = FirecrackerExecutorBuilder::new()
         .with_chroot(executer_path)
         .with_exec_binary(firecracker_bin_location.into())
         .try_build()
         .unwrap();
-    println!("executer setup");
+    println!("fin - executer setup");
+
+    let network = NetworkInterfaceBuilder::new()
+        .with_iface_id("eth0".to_string())
+        .with_host_dev_name("tap0".to_string())
+        .try_build()
+        .unwrap();
+    println!("fin - network setup");
 
     let config = Configuration::new("simple_vm".to_string())
         .with_kernel(kernel)
         .with_executor(executor)
+        .with_interface(network)
         .with_drive(drive);
     println!("Configuration finised");
     let mut machine = Machine::new();
