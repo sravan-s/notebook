@@ -4,7 +4,8 @@
     "firecracker@1.7.0",
     "nodejs@22.4.1",
     "libiconv@2.39",
-    "rustup@1.27.1"
+    "rustup@1.27.1",
+    "go@1.23.1"
   ],
   "shell": {
     "init_hook": [

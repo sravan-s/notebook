@@ -1,7 +1,7 @@
 import fs from 'fs';
 
 const context = (notebook, paragraph) => {
-  // see ../linux/setup-alpine.sh
+  // see ../linux/setup_alpine.sh
   const parent = `/home/notebook/${notebook}_${paragraph}`;
   return {
     // to get saved data from machine

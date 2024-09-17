@@ -15,9 +15,9 @@ echo "Filesystem mounted at /tmp/my-rootfs"
 
 docker run -i --rm \
     -v /tmp/my-rootfs:/my-rootfs \
-    -v "$(pwd)/agent:/usr/local/bin/agent" \
+    -v "$(pwd)/agent/agent:/usr/local/bin/agent" \
     -v "$(pwd)/openrc-service.sh:/etc/init.d/agent" \
-    alpine sh <setup-alpine.sh
+    alpine sh <setup_alpine.sh
 
 umount /tmp/my-rootfs
 
