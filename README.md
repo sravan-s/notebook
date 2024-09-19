@@ -1,3 +1,8 @@
+Update 19/09/2024 - I got a better idea, this peoject has gotten too convoluted
+To narrow the focus, I will build a execution engine. honestly, that's the part that
+I wanted to work with ~ the notebook ui are not so fun.
+See - https://github.com/sravan-s/notebook_engine
+
 # notebook > Revisit apache zepplin :)
 
 Zeppelin is a Web-based notebook that enables data-driven,
@@ -34,7 +39,12 @@ Steps:
 * Web is in `/web`
 * API tests are in `/api_tests`
 * You need some dependencies to run Firecracker, for that look at `./linux/README.md`
-* Install `docker` if you want to build firecracker image.
+* Install `docker` to build firecracker image. `./linux/build.sh`
+---
+* To run the app -
+  * Build the firecracker image. `./linux/build.sh`
+  * Build server `cargo build`
+  * `sudo ./target/debug/notebook` (need sudo to setup network)
 
 References:
 * https://www.jetify.com/devbox/docs/devbox_examples/languages/rust/

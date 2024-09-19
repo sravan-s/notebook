@@ -4,7 +4,7 @@ mkdir assets
 rm -rf ./agent
 mkdir agent
 
-rm -rf ./executer
+sudo rm -rf ./executer
 
 ./build_agent.sh
 

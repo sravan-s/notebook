@@ -1,4 +1,7 @@
-use std::time::{Duration, Instant};
+use std::{
+    process::Command,
+    time::{Duration, Instant},
+};
 
 use anyhow::{Ok, Result};
 use firepilot::{
@@ -43,9 +46,10 @@ pub async fn init_vm() -> Result<()> {
         .unwrap();
     println!("fin - executer setup");
 
+    let tap_name = "tap0";
     let network = NetworkInterfaceBuilder::new()
         .with_iface_id("eth0".to_string())
-        .with_host_dev_name("tap0".to_string())
+        .with_host_dev_name(tap_name.to_string())
         .try_build()
         .unwrap();
     println!("fin - network setup");
@@ -53,7 +57,7 @@ pub async fn init_vm() -> Result<()> {
     let config = Configuration::new("simple_vm".to_string())
         .with_kernel(kernel)
         .with_executor(executor)
-        .with_interface(network)
+        .with_interface(network.clone())
         .with_drive(drive);
     println!("Configuration finised");
     let mut machine = Machine::new();
@@ -63,12 +67,59 @@ pub async fn init_vm() -> Result<()> {
     machine.start().await.expect("Could not start VM");
     println!(
         "Waiting a few seconds, the VM started at this point, it took: {:?}",
-        now.elapsed()
+        now.elapsed(),
     );
-    sleep(Duration::from_secs(5)).await;
+
+    let bridge_name = "my_bridge";
+    Command::new("ip")
+        .arg("link")
+        .arg("add")
+        .arg(bridge_name)
+        .arg("type")
+        .arg("bridge")
+        .status()?;
+
+    // Bring the bridge interface up
+    Command::new("ip")
+        .arg("link")
+        .arg("set")
+        .arg(bridge_name)
+        .arg("up")
+        .status()?;
+
+    Command::new("ip")
+        .arg("link")
+        .arg("set")
+        .arg(tap_name)
+        .arg("master")
+        .arg(bridge_name)
+        .status()?;
+
+    // Bring the TAP interface up
+    Command::new("ip")
+        .arg("link")
+        .arg("set")
+        .arg(tap_name)
+        .arg("up")
+        .status()?;
+    sleep(Duration::from_secs(100)).await;
     machine.stop().await.unwrap();
     println!("Shutting down the VM");
     machine.kill().await.unwrap();
+
+    Command::new("ip")
+        .arg("link")
+        .arg("delete")
+        .arg(tap_name)
+        .status()?;
+
+    Command::new("ip")
+        .arg("link")
+        .arg("delete")
+        .arg(bridge_name)
+        .status()?;
+
+    println!("Removed tap and bridge");
 
     Ok(())
 }
